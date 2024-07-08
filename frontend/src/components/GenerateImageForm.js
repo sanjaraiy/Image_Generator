@@ -41,7 +41,22 @@ const Desc = styled.div`
   color: ${({ theme }) => theme.text_secondary};
 `;
 
-function GenerateImageForm() {
+function GenerateImageForm({
+  post,
+  setPost,
+  createPostLoading,
+  generateImageLoading,
+  setGenerateImageLoading,
+  setCreatePostLoading,
+}) {
+
+ const generateImageFun = () => {
+    setGenerateImageLoading(true);
+ }
+ const createPostFun = () => {
+    setCreatePostLoading(true);
+ }
+
   return (
     <Form>
       <Top>
@@ -51,19 +66,42 @@ function GenerateImageForm() {
         </Desc>
       </Top>
       <Body>
-        <TextInput label="Author" placeholder="Enter your name..."></TextInput>
+        <TextInput 
+          label="Author" 
+          placeholder="Enter your name..."
+          name="name"
+          value={post.name}
+          handelChange={(e) => setPost({...post, prompt:e.target.value})}
+        ></TextInput>
         <TextInput
           label="Image Prompt"
           placeholder="Write a detailed prompt about the image..."
           name="name"
           rows="8"
           textArea
+          value={post.prompt}
+          handelChange={(e) => setPost({...post, prompt:e.target.value})}
         ></TextInput>
         ** You can post the AI Generated Image to the Community **
       </Body>
       <Action>
-        <Button text="Generate Image" flex={"flex"} leftIcon={<AutoAwesome></AutoAwesome>}></Button>
-        <Button text="Post Image" type="secondary" flex={"flex"} leftIcon={<CreateRounded></CreateRounded>}></Button>
+        <Button 
+           text="Generate Image" 
+           flex={"flex"} 
+           leftIcon={<AutoAwesome></AutoAwesome>}
+           isLoading={generateImageLoading} 
+           isDisabled={ post.prompt === ""}
+           onClick={() => generateImageFun()}
+        ></Button>
+        <Button 
+           isLoading={createPostLoading} 
+           text="Post Image" 
+           type="secondary" 
+           flex={"flex"} 
+           leftIcon={<CreateRounded></CreateRounded>}
+           isDisabled={post.name === "" || post.prompt === "" || post.photo === ""}
+           onClick={() => createPostFun()}
+        ></Button>
       </Action>
     </Form>
   );

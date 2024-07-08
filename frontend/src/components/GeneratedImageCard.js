@@ -6,6 +6,7 @@ const Container = styled.dev`
 flex:1;
 padding: 16px;
 display: flex;
+min-height:300px;
 gap: 16px;
 flex-direction: column;
 border:2px dashed ${({theme}) => theme.yellow};

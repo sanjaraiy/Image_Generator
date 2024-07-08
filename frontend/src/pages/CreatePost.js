@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import GenerateImageForm from '../components/GenerateImageForm'
 import GeneratedImageCard from '../components/GeneratedImageCard';
@@ -33,14 +33,31 @@ justify-content: center;
 
 
 function CreatePost() {
-
-
+  const [generateImageLoading, setGenerateImageLoading] = useState(false);
+  const [createPostLoading, setCreatePostLoading] = useState(false);
+  const [post, setPost] = useState({
+    name: "",
+    prompt: "",
+    photo: "",
+  })
 
   return (
     <Container>
        <Wrapper>
-         <GenerateImageForm></GenerateImageForm>
-         <GeneratedImageCard loading></GeneratedImageCard>
+         <GenerateImageForm 
+            post={post} 
+            setPost={setPost} 
+            createPostLoading = {createPostLoading } 
+            generateImageLoading={generateImageLoading} 
+            setGenerateImageLoading={setGenerateImageLoading} 
+            setCreatePostLoading={setCreatePostLoading}
+         ></GenerateImageForm>
+         <GeneratedImageCard 
+            src={post?.photo} 
+            author={post?.author} 
+            prompt={post?.prompt} 
+            loading = {generateImageLoading}
+         ></GeneratedImageCard>
        </Wrapper>
     </Container>
   )
