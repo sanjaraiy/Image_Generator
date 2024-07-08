@@ -4,6 +4,7 @@ import {LazyLoadImage} from "react-lazy-load-image-component"
 import { DownloadRounded } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
 import {saveAs} from 'file-saver';
+
 const Card = styled.div`
 position: relative;
 display: flex;

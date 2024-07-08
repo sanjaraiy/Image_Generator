@@ -27,6 +27,7 @@ ${({ isLoading }) => isLoading && `opacity: 0.8; cursor: not-allowed;`}
 
 ${({ flex }) => flex && `flex: 1;`}`;
 
+
 const button = ({text, isLoading, isDisabled, rightIcon, leftIcon, type, onClick, flex}) => {
   
     return (
