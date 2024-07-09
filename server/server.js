@@ -2,11 +2,14 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express from "express";
+import PostRouter from "./routes/Posts.route";
+import GenerateImageRouter from "./routes/GenerateAIImage.route";
 
 dotenv.config();
-const app = express();
 
+const app = express();
 const PORT = process.env.PORT || 8080;
+const URL = process.env.MONGODB_URI;
 
 //========== default middlewares ===================
 app.use(cors());
@@ -22,6 +25,9 @@ app.use((err,req,res,next)=>{
     }) 
 })
 
+
+app.use("/api/v1/post", PostRouter);
+app.use("/api/v1/generateImage",  GenerateImageRouter)
 //=========== Default route =============
 app.get("/", async (req,res) => {
     res.status(200).json({
@@ -30,9 +36,23 @@ app.get("/", async (req,res) => {
 })
 
 
+
+//============ Connect to mongodb ==============
+const connectDB = () => {
+    mongoose.set("strictQuery", true);
+    mongoose.connect(URL)
+    .then(() => {
+           console.log("Successfully Connected MongoDB...!!");
+    })
+    .catch((err) => {
+        console.error("Failed to Connect to DB");
+    })
+}
+
 //============ Server Running Function ===================
 const startServer = () =>{
     try {
+        connectDB()
         app.listen(PORT, () => {
             console.log("Server started on Port: ",PORT);
         })
