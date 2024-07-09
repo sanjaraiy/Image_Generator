@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import ImageCard from '../components/ImageCard';
 import SearchBar from '../components/SearchBar';
+import { CircularProgress } from '@mui/material';
+import { GetPosts } from '../api';
 
 const Container = styled.div`
 height:100%;
@@ -68,6 +70,49 @@ gap:20px;
 
 function Home() {
   
+   const [posts, setPosts] = useState([]);
+   const [loading, setLoading] = useState(false);
+   const [error, setError] = useState("");
+   const [search, setSearch] = useState("");
+   const [filteredPosts, setFilteredPosts] = useState([]);
+    
+
+  const getPosts = async () => {
+     setLoading(true);
+     await GetPosts()
+     .then((res) => {
+         setLoading(false);
+         setPosts(res?.data?.data);
+         setFilteredPosts(res?.data?.data)
+     })
+     .catch((error) => {
+      setError(error?.response?.data?.message);
+      setLoading(false);
+
+     })
+  }
+
+  useEffect(() => {
+    getPosts();
+  },[])
+
+ useEffect(() => {
+    if(!search){
+      setFilteredPosts(posts);
+    }
+
+    const SearchFilteredPosts = posts.filter((post) => {
+      const promptMatch = post?.prompt?.toLowerCase().includes(search.toString().toLowerCase());
+      const authorMatch = post?.name?.toLowerCase().includes(search.toString().toLowerCase());
+
+      return promptMatch || authorMatch;
+    });
+
+    if(search){
+      setFilteredPosts(SearchFilteredPosts);
+    }
+ }, [posts, search])
+
   const item = {
     photo: "https://images.pexels.com/photos/26409497/pexels-photo-26409497/free-photo-of-a-small-white-house-sits-in-the-middle-of-a-field.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load",
     author: "Sanjay Rai",
@@ -81,14 +126,14 @@ function Home() {
       <Headline>Explore posts in the Community!
          <Span> » Generated with AI « </Span>
       </Headline>
-      <SearchBar></SearchBar>
+      <SearchBar search={search} setSearch={setSearch}></SearchBar>
       <Wrapper>
-        <CardWrapper>
-          <ImageCard item={item}></ImageCard>
-          <ImageCard></ImageCard>
-          <ImageCard></ImageCard>
-          <ImageCard></ImageCard>
-        </CardWrapper>
+        {error && <div style = {{color : "red"}}>{error}</div>}
+        {loading ? (<CircularProgress></CircularProgress>) : (
+          <CardWrapper>
+            {filteredPosts.length === 0 ? <> No Posts Found </> : <>{filteredPosts.slice().reverse().map((item, index) => <ImageCard key = {index} item = {item}></ImageCard>)}</>}
+          </CardWrapper>
+        )}
       </Wrapper>
     </Container>
   )

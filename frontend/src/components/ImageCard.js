@@ -79,7 +79,7 @@ function ImageCard({item}) {
                 justifyContent:"space-between",
             }}>
             <Author>
-               <Avatar sx={{width:"32px", height:"32px"}}>{item?.author[0]}</Avatar>
+               <Avatar sx={{width:"32px", height:"32px"}}>{item?.name[0]}</Avatar>
                {item?.author} 
             </Author>
             <DownloadRounded onClick={()=>saveAs(item?.photo,"download.jpg")} ></DownloadRounded>
